@@ -241,18 +241,25 @@ public class AStarPath {
      * @param gy 终点Y
      * @return
      */
-    public LinkedList<Vector> findPath(int sx, int sy, int gx, int gy){
+    public LinkedList<Tile> findPath(int sx, int sy, int gx, int gy){
+    	byte t1 = map[sx][sy];
+		byte t2 = map[gx][gy];
+		// 强制通行（演示用）
+    	map[sx][sy] = 0;
+		map[gx][gy] = 0;
     	init(sx, sy, gx, gy);
         searchPath();
-        if(! isFound){
+		map[sx][sy] = t1;
+		map[gx][gy] = t2;
+        if(!isFound){
             return null;
         }
-    	LinkedList<Vector> route = new LinkedList<Vector>();
+    	LinkedList<Tile> route = new LinkedList<Tile>();
         // openList是从目标点向起始点倒推的。
         int iX = goal_x;
         int iY = goal_y;
         while((iX != start_x || iY != start_y)){
-            route.add(0, new Vector(iX, iY));
+            route.add(0, new Tile(iX, iY));
             switch(openList[iX][iY][FATHER_DIR]){
             case DIR_DOWN:          iY++;            break;
             case DIR_UP:            iY--;            break;
@@ -278,9 +285,9 @@ public class AStarPath {
 		}
 		System.out.println(map[1][3] + " -> " + map[0][0]);
 		AStarPath asr = new AStarPath(map);
-		List<Vector> result = asr.findPath(3, 1, 0, 0);
+		List<Tile> result = asr.findPath(3, 1, 0, 0);
 		if(result != null) {
-			for (Vector p : result) {
+			for (Tile p : result) {
 				System.out.println(p.x + "," + p.y);
 			}
 		} else {
