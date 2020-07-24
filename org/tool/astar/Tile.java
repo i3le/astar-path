@@ -21,6 +21,10 @@ public class Tile {
         this.y = v.y;
     }
 
+    public Tile(float x, float y) {
+        this(Math.round(x), Math.round(y));
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -29,7 +33,7 @@ public class Tile {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        GirdTile p = (GirdTile) o;
+        Tile p = (Tile) o;
         return x == p.x && y == p.y;
     }
 
