@@ -20,7 +20,8 @@ import javax.swing.JTextField;
  */
 public class GirdMapGUI {
 
-    private static final Color COLOR_PATH = new Color(0, 0, 255);
+    private static final Color COLOR_GIRD = new Color(255, 228, 122);
+    private static final Color COLOR_PATH = new Color(173, 255, 149);
     private static final Color COLOR_POINT = new Color(255, 0, 0);
 
     private static final Color COLOR_BLOCK = new Color(0, 0, 0);
@@ -144,10 +145,10 @@ public class GirdMapGUI {
         frame.getContentPane().add(btnFind);
 
         x += 110;
-        JButton btnRandom = new JButton("随机寻路");
+        JButton btnRandom = new JButton("随机路点");
         btnRandom.addActionListener(e ->{
-            txtY2.setText(String.valueOf(random.nextInt(map[0].length)));
-            txtX2.setText(String.valueOf(random.nextInt(map.length)));
+            setY.setText(String.valueOf(random.nextInt(map[0].length)));
+            setX.setText(String.valueOf(random.nextInt(map.length)));
             canvas.findPath();
             canvas.repaint();
         });
@@ -266,7 +267,7 @@ public class GirdMapGUI {
             int maxx = Math.min (map.length, (this.getWidth() / R));
             int maxy =  Math.min (map[0].length, (this.getHeight() / R));
             // 画地图
-            g2d.setColor(COLOR_PATH);
+            g2d.setColor(COLOR_GIRD);
             for (int i = 0; i <= maxy; i++) {
                 g2d.drawLine(0, i * R, maxx * R, i * R);
             }
@@ -282,8 +283,6 @@ public class GirdMapGUI {
                     }
                 }
             }
-
-            System.out.println("地图画好啦~");
 
             if (path != null) {
                 for (Tile node : path) {
