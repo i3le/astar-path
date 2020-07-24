@@ -121,7 +121,7 @@ public class GirdMapGUI {
         onP2.run();
 
         canvas = new TileCanvas();
-        canvas.setBounds(45, 35, 1280, 800);
+        canvas.setBounds(40, 35, 1281, 801);
         canvas.setBackground(new Color(244, 244, 244));
         frame.getContentPane().add(canvas);
 
@@ -223,7 +223,7 @@ public class GirdMapGUI {
             // 障碍点
             for (int i = 0; i < map.length; i++) {
                 for (int j = 0; j < map[i].length; j++) {
-                    if (random.nextFloat() < 0.2) {
+                    if (random.nextFloat() < 0.2F) {
                         map[i][j] = 1;
                     }
                 }
@@ -266,13 +266,15 @@ public class GirdMapGUI {
             int maxx = Math.min (map.length, (this.getWidth() / R));
             int maxy =  Math.min (map[0].length, (this.getHeight() / R));
             // 画地图
-            for (int i = 0; i < maxx; i++) {
-                for (int j = 0; j < maxy; j++) {
-                    if(map[i][j] == 0) {
-                        drawNode(g2d, i, j, COLOR_PATH);
-                    }
-                }
+            g2d.setColor(COLOR_PATH);
+            for (int i = 0; i <= maxy; i++) {
+                g2d.drawLine(0, i * R, maxx * R, i * R);
             }
+            for (int j = 0; j <= maxx; j++) {
+                g2d.drawLine(j * R, 0, j * R, maxy * R);
+            }
+
+            // 画障碍
             for (int i = 0; i < maxx; i++) {
                 for (int j = 0; j < maxy; j++) {
                     if(map[i][j] != 0) {
@@ -287,20 +289,12 @@ public class GirdMapGUI {
                 for (Tile node : path) {
                     fillNode(g2d, node.x, node.y, COLOR_PATH);
                 }
+                System.out.println("路径画好啦~");
             }
 
-            System.out.println("路径画好啦~");
 
             fillNode(g2d, x1, y1, COLOR_POINT);
             fillNode(g2d, x2, y2, COLOR_POINT);
-        }
-
-        void drawNode(Graphics2D g2d, int x, int y, Color color) {
-            if(x > this.getWidth() / R || y > this.getHeight() / R) {
-                return;
-            }
-            g2d.setColor(color);
-            g2d.drawRect(x * R, y * R, R, R);
         }
 
         void fillNode(Graphics2D g2d, int x, int y, Color color) {
@@ -314,7 +308,7 @@ public class GirdMapGUI {
         Tile getNode(double x, double y) {
             int tx = (int) ((x) / R);
             int ty = (int) ((y) / R);
-            if (tx > map.length || ty > map[0].length) {
+            if (tx < 0 || ty < 0 || tx >= map.length || ty >= map[0].length) {
                 return null;
             }
             return new Tile(tx, ty);

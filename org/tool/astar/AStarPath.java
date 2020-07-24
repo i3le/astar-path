@@ -242,6 +242,10 @@ public class AStarPath {
      * @return
      */
     public LinkedList<Tile> findPath(int sx, int sy, int gx, int gy){
+		if ((sx >= map.length || sy >= map[0].length) || (gx >= map.length || gy >= map[0].length)
+				|| (sx < 0 || sy < 0) || (gx < 0 || gy < 0)) {
+			return null;
+		}
     	byte t1 = map[sx][sy];
 		byte t2 = map[gx][gy];
 		// 强制通行（演示用）
