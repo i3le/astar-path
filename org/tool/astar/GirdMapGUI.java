@@ -127,7 +127,7 @@ public class GirdMapGUI {
         frame.getContentPane().add(canvas);
 
         x += 80;
-        JButton btnFast = new JButton("最短路径");
+        JButton btnFast = new JButton("直线路径");
         btnFast.addActionListener(e -> {
             canvas.findFastPath();
             canvas.repaint();
@@ -181,23 +181,26 @@ public class GirdMapGUI {
                 onMouseEvent(e);
             }
             @Override
-            public void mouseMoved(MouseEvent e) {
-                onMouseLoc(e);
-            }
+			public void mouseMoved(MouseEvent e) {
+				Tile tile = onMouseLoc(e);
+				if (tile != null && !tile.equals(canvas.mouse)) {
+					canvas.mouse = tile;
+					canvas.repaint();
+				}
+			}
         });
     }
 
-    private void onMouseLoc(MouseEvent e) {
-        Tile node = canvas.getNode(e.getX(), e.getY());
-        if (node == null) {
-            node = new Tile(0, 0);
+    private Tile onMouseLoc(MouseEvent e) {
+        Tile tile = canvas.getNode(e.getX(), e.getY());
+        if (tile != null) {
+            lblMouse.setText(String.format("(%s, %s) (%s, %s)", e.getX(), e.getY(), tile.x, tile.y));
         }
-        lblMouse.setText(String.format("(%s, %s) (%s, %s)", e.getX(), e.getY(), node.x, node.y));
+        return tile;
     }
 
     private void onMouseEvent(MouseEvent e) {
-        onMouseLoc(e);
-        Tile node = canvas.getNode(e.getX(), e.getY());
+        Tile node = onMouseLoc(e);;
         if (node != null) {
             setX.setText(String.valueOf(node.x));
             setY.setText(String.valueOf(node.y));
@@ -208,7 +211,9 @@ public class GirdMapGUI {
 
     public class TileCanvas extends JPanel {
 
-        int R = 20;
+    	private static final long serialVersionUID = -4001644543381424464L;
+
+		int R = 20;
 
         AStarPath hPath = new AStarPath(map);
         public TileCanvas() {
@@ -234,6 +239,7 @@ public class GirdMapGUI {
 
         List<Tile> path;
         int x1, y1, x2, y2;
+        Tile mouse;
 
         private void build() {
             x1 = Integer.valueOf(txtX1.getText());
@@ -294,6 +300,10 @@ public class GirdMapGUI {
 
             fillNode(g2d, x1, y1, COLOR_POINT);
             fillNode(g2d, x2, y2, COLOR_POINT);
+            
+            if(mouse != null) {
+                fillNode(g2d, mouse.x, mouse.y, COLOR_POINT);
+            }
         }
 
         void fillNode(Graphics2D g2d, int x, int y, Color color) {
